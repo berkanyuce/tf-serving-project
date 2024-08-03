@@ -9,6 +9,8 @@ services:
     volumes:
       - ./fastapi/models:/models
     command: "--model_config_file=/models/models.config"
+    networks:
+      - my_network
   
   fastapi:
     build:
@@ -19,10 +21,13 @@ services:
       - "8000:8000"
     depends_on:
       - tf_serving
+      - postgres
     volumes:
       - ./fastapi:/app
     command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
-
+    networks:
+      - my_network
+  
   frontend:
     build:
       context: ./frontend
@@ -35,5 +40,37 @@ services:
     volumes:
       - ./frontend:/app
     command: npm start
+    networks:
+      - my_network
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_DB: tf_serving
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+  pg-admin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    ports:
+      - "8080:80" 
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    networks:
+      - my_network
+
+volumes:
+  postgres_data:
   
-  
+networks:
+  my_network:
+    name: tf_serving_network
