@@ -1,0 +1,46 @@
+2024-08-03 09:44:21.050 +03 [73939] LOG:  starting PostgreSQL 16.3 (Postgres.app) on aarch64-apple-darwin21.6.0, compiled by Apple clang version 14.0.0 (clang-1400.0.29.102), 64-bit
+2024-08-03 09:44:21.052 +03 [73939] LOG:  listening on IPv6 address "::1", port 5432
+2024-08-03 09:44:21.052 +03 [73939] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2024-08-03 09:44:21.052 +03 [73939] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2024-08-03 09:44:21.054 +03 [73943] LOG:  database system was shut down at 2024-08-03 09:44:20 +03
+2024-08-03 09:44:21.056 +03 [73939] LOG:  database system is ready to accept connections
+2024-08-03 09:49:21.055 +03 [73941] LOG:  checkpoint starting: time
+2024-08-03 09:51:00.483 +03 [73941] LOG:  checkpoint complete: wrote 983 buffers (6.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=99.411 s, sync=0.010 s, total=99.428 s; sync files=318, longest=0.001 s, average=0.001 s; distance=4583 kB, estimate=4583 kB; lsn=0/197FFD0, redo lsn=0/197FF98
+2024-08-03 11:15:42.963 +03 [73939] LOG:  received fast shutdown request
+2024-08-03 11:15:42.964 +03 [73939] LOG:  aborting any active transactions
+2024-08-03 11:15:42.965 +03 [78467] FATAL:  terminating connection due to administrator command
+2024-08-03 11:15:42.965 +03 [95194] FATAL:  terminating connection due to administrator command
+2024-08-03 11:15:42.967 +03 [73939] LOG:  background worker "logical replication launcher" (PID 73946) exited with exit code 1
+2024-08-03 11:15:42.969 +03 [73941] LOG:  shutting down
+2024-08-03 11:15:42.970 +03 [73941] LOG:  checkpoint starting: shutdown immediate
+2024-08-03 11:15:42.977 +03 [73941] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.001 s, total=0.008 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=4125 kB; lsn=0/1980098, redo lsn=0/1980098
+2024-08-03 11:15:42.984 +03 [73939] LOG:  database system is shut down
+2024-08-03 11:15:44.051 +03 [96049] LOG:  starting PostgreSQL 16.3 (Postgres.app) on aarch64-apple-darwin21.6.0, compiled by Apple clang version 14.0.0 (clang-1400.0.29.102), 64-bit
+2024-08-03 11:15:44.052 +03 [96049] LOG:  listening on IPv6 address "::1", port 5432
+2024-08-03 11:15:44.052 +03 [96049] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2024-08-03 11:15:44.052 +03 [96049] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2024-08-03 11:15:44.056 +03 [96052] LOG:  database system was shut down at 2024-08-03 11:15:42 +03
+2024-08-03 11:15:44.062 +03 [96049] LOG:  database system is ready to accept connections
+2024-08-03 11:20:44.059 +03 [96050] LOG:  checkpoint starting: time
+2024-08-03 11:20:44.066 +03 [96050] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.009 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1980180, redo lsn=0/1980148
+2024-08-03 11:28:11.751 +03 [99984] ERROR:  syntax error at or near ":" at character 70
+2024-08-03 11:28:11.751 +03 [99984] STATEMENT:  DO $$
+	BEGIN
+	    IF EXISTS (SELECT 1 FROM pg_database WHERE datname = :'db_name') THEN
+	        EXECUTE 'DROP DATABASE :' || quote_ident('db_name');
+	    END IF;
+	END $$;
+2024-08-03 11:30:44.060 +03 [96050] LOG:  checkpoint starting: time
+2024-08-03 11:35:26.215 +03 [96050] LOG:  checkpoint complete: wrote 953 buffers (5.8%); 1 WAL file(s) added, 0 removed, 0 recycled; write=281.998 s, sync=0.012 s, total=282.155 s; sync files=312, longest=0.002 s, average=0.001 s; distance=4386 kB, estimate=4386 kB; lsn=0/1DC8988, redo lsn=0/1DC8950
+2024-08-03 11:42:59.613 +03 [3758] LOG:  invalid length of startup packet
+2024-08-03 11:42:59.632 +03 [3781] LOG:  invalid length of startup packet
+2024-08-03 11:42:59.643 +03 [3782] LOG:  invalid length of startup packet
+2024-08-03 11:43:09.514 +03 [96049] LOG:  received fast shutdown request
+2024-08-03 11:43:09.515 +03 [96049] LOG:  aborting any active transactions
+2024-08-03 11:43:09.517 +03 [1474] FATAL:  terminating connection due to administrator command
+2024-08-03 11:43:09.517 +03 [1470] FATAL:  terminating connection due to administrator command
+2024-08-03 11:43:09.518 +03 [96049] LOG:  background worker "logical replication launcher" (PID 96055) exited with exit code 1
+2024-08-03 11:43:09.520 +03 [96050] LOG:  shutting down
+2024-08-03 11:43:09.521 +03 [96050] LOG:  checkpoint starting: shutdown immediate
+2024-08-03 11:43:09.526 +03 [96050] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.001 s, total=0.006 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=3947 kB; lsn=0/1DC8A38, redo lsn=0/1DC8A38
+2024-08-03 11:43:09.533 +03 [96049] LOG:  database system is shut down
