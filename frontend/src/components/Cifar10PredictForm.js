@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-// Utility function to convert image to a 32x32x3 matrix
 const processImage = async (file) => {
   const img = new Image();
   const canvas = document.createElement('canvas');
@@ -95,6 +94,7 @@ const Cifar10PredictForm = () => {
   };
 
   return (
+    <>
     <div className='flex justify-center'>
       <div className='flex justify-center flex-col w-1/2'>
         <form className='flex flex-col' onSubmit={handleSubmit}>
@@ -118,6 +118,7 @@ const Cifar10PredictForm = () => {
         {error && <div>Error: {JSON.stringify(error)}</div>}
       </div>
     </div>
+    </>
   );
 };
 
