@@ -43,7 +43,6 @@ public class PredictionsService {
             throw new RuntimeException("Not found");
         }
         Predictions prediction = new Predictions();
-        prediction.setId(predictionRequest.getId());
         prediction.setUser(user);
         prediction.setModel(model);
         prediction.setResult(predictionRequest.getResult());

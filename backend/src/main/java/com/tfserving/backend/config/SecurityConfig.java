@@ -22,8 +22,8 @@ public class SecurityConfig {
                 .cors().and() 
                 .csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/users/register").permitAll() 
-                        .requestMatchers("/users/login").permitAll() 
+                        .requestMatchers("/users/register", "/users/login", "/error").permitAll()
+                        .requestMatchers("/predictions").permitAll()
                         .anyRequest().authenticated()
                 );
 

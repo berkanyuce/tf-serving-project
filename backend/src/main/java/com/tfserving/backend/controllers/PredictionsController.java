@@ -46,4 +46,6 @@ public class PredictionsController {
     public void deletePrediction(@PathVariable Long id) {
         predictionsService.deletePrediction(id);
     }
+
+    
 }

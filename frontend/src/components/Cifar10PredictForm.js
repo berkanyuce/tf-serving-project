@@ -28,7 +28,7 @@ const processImage = async (file) => {
           const r = data[index] / 255;
           const g = data[index + 1] / 255;
           const b = data[index + 2] / 255;
-          row.push([r, g, b]); // RGB values
+          row.push([r, g, b]); 
         }
         matrix.push(row);
       }
@@ -43,7 +43,7 @@ const processImage = async (file) => {
 
 const Cifar10PredictForm = () => {
   const [imageData, setImageData] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null); // New state for image preview
+  const [imagePreview, setImagePreview] = useState(null); 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
 
@@ -54,7 +54,6 @@ const Cifar10PredictForm = () => {
         const imgData = await processImage(file);
         setImageData(imgData);
 
-        // Create a preview URL and set it to state
         const previewURL = URL.createObjectURL(file);
         setImagePreview(previewURL);
       } catch (err) {
@@ -83,6 +82,21 @@ const Cifar10PredictForm = () => {
       if (result.data && result.data.predicted_class) {
         const predictedClass = result.data.predicted_class;
         setResponse({ predictedClass: predictedClass });
+        try {
+          const save_prediction = await axios.post('http://localhost:8080/predictions', {
+            modelId: 1,
+            userId: 1,
+            result: predictedClass
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            timeout: 5000
+          });
+        } catch (error) {
+          console.log("Error details:", error);
+          setError(error.response ? error.response.data : 'An error occurred');
+        }
       } else {
         console.log("Predictions data is not available.");
         setError("Prediction data is not available.");
