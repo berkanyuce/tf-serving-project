@@ -8,20 +8,35 @@ export const UserProvider = ({ children }) => {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
+  const fetchPredictions = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:8081/predictions?user_id=${userId}`);
+      const predictions = await response.json();
+      setUser((prevUser) => ({ ...prevUser, predictions }));
+    } catch (error) {
+      console.error("Failed to fetch predictions:", error);
+    }
+  };
+
   const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData)); 
+    setUser({ ...userData, predictions: [] });
+    localStorage.setItem('user', JSON.stringify({ ...userData, predictions: [] }));
+    fetchPredictions(userData.id);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user'); 
+    localStorage.removeItem('user');
   };
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      const parsedUser = JSON.parse(savedUser);
+      setUser(parsedUser);
+      if (parsedUser.id) {
+        fetchPredictions(parsedUser.id);
+      }
     }
   }, []);
 

@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Entity
@@ -36,4 +37,9 @@ public class Predictions {
     Users user;
 
     String result;
+
+    @Transient
+    public String getModelName() {
+        return model != null ? model.getModelName() : null;
+    }
 }

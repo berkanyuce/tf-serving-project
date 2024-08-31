@@ -1,5 +1,6 @@
 package com.tfserving.backend.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import com.tfserving.backend.entities.Models;
 @Service
 public class PredictionsService {
 
+    @Autowired
     private PredictionsRepository predictionsRepository;
     private UsersService usersService;
     private ModelsService modelsService;
@@ -26,8 +28,8 @@ public class PredictionsService {
     }
 
     public List<Predictions> getAllPredictions(Optional<Long> user_id) {
-        if(user_id.isPresent()) {
-            return predictionsRepository.findByUserId(user_id.get());
+        if (user_id.isPresent()) {
+            return predictionsRepository.findByUserIdWithModel(user_id.get());
         }
         return predictionsRepository.findAll();
     }

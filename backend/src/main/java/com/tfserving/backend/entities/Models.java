@@ -17,4 +17,8 @@ public class Models {
     Long id;
 
     String model_name;
+
+    public String getModelName() {
+        return model_name;
+    }
 }
