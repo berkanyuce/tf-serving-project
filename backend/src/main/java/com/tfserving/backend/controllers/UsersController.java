@@ -16,7 +16,10 @@ import com.tfserving.backend.services.UsersService;
 import com.tfserving.backend.dtos.LoginDTO;
 import com.tfserving.backend.dtos.UsersRegisterDTO;
 import com.tfserving.backend.entities.Users;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -54,21 +57,38 @@ public class UsersController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@Validated @RequestBody UsersRegisterDTO userRegistrationDTO) {
+    public ResponseEntity<Map<String, Object>> registerUser(
+            @Validated @RequestBody UsersRegisterDTO userRegistrationDTO) {
         Users registeredUser = usersService.registerNewUser(userRegistrationDTO);
+        Map<String, Object> response = new HashMap<>();
+
         if (registeredUser == null) {
-            return new ResponseEntity<>("User already exists", HttpStatus.BAD_REQUEST);
+            response.put("message", "User already exists");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
+
+        response.put("message", "User registered successfully");
+        response.put("user", Map.of(
+                "username", registeredUser.getUsername(),
+                "id", registeredUser.getId()));
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Validated @RequestBody LoginDTO loginDTO) {
-        boolean isAuthenticated = usersService.login(loginDTO.getUsername(), loginDTO.getUserpassword());
-        if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
+    public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody LoginDTO loginDTO) {
+        Users user = usersService.loginAndGetUser(loginDTO.getUsername(), loginDTO.getUserpassword());
+        Map<String, Object> response = new HashMap<>();
+        if (user != null) {
+            response.put("message", "Login successful");
+            response.put("user", Map.of(
+                    "username", user.getUsername(),
+                    "id", user.getId()));
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(401).body("Invalid credentials");
+            response.put("message", "Invalid credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
+
 }

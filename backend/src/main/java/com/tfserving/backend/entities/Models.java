@@ -3,6 +3,8 @@ package com.tfserving.backend.entities;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.Data;
 
 @Entity
@@ -11,6 +13,7 @@ import lombok.Data;
 public class Models {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     String model_name;
