@@ -24,13 +24,13 @@ public class Predictions {
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "model_id", nullable = false)
+    @JoinColumn(name = "model_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     Models model;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     Users user;

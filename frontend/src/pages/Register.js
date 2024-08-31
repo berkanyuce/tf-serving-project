@@ -1,55 +1,53 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext';
 
-
-const Register = (props) => {
+const Register = () => {
   const [username, setUsername] = useState("");
   const [userpassword, setUserpassword] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
+  const { login } = useUser(); // `login` fonksiyonunu kullanıyoruz
 
   const submitRegistration = async () => {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, userpassword }),
-      };
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, userpassword }),
+    };
 
+    try {
+      const response = await fetch("http://localhost:8081/users/register", requestOptions);
+
+      let data;
       try {
-        const response = await fetch("http://localhost:8080/users/register", requestOptions);
-        
-        console.log("Response:", response);
-
-        let data;
-        try {
-          data = await response.text(); // JSON yerine text kullanıyoruz
-          console.log("Data:", data);
-        } catch (textError) {
-          console.error("Failed to parse response:", textError);
-        }
-
-        if (!response.ok) {
-          setErrorMessage(data + ". Registration failed. Please try again.");
-        } else {
-          props.setIsLoggedIn(true);
-          navigate('/'); 
-        }
-      } catch (error) {
-        console.error("Network error:", error);
-        setErrorMessage("Network error. Please try again later.");
+        data = await response.json(); // JSON yanıtını ayrıştırma
+      } catch (jsonError) {
+        console.error("Yanıt ayrıştırılamadı:", jsonError);
+        setErrorMessage("Yanıt ayrıştırılamadı. Lütfen tekrar deneyin.");
+        return;
       }
+
+      if (response.ok && data.user) {
+        login(data.user); // Kullanıcıyı giriş yapmış gibi kaydetme
+        localStorage.setItem('user', JSON.stringify(data.user)); // Kullanıcıyı localStorage'da saklama
+        navigate('/');
+      } else {
+        setErrorMessage(data.message || "Kayıt başarısız. Lütfen tekrar deneyin.");
+      }
+    } catch (error) {
+      console.error("Ağ hatası:", error);
+      setErrorMessage("Ağ hatası. Lütfen daha sonra tekrar deneyin.");
+    }
   };
-
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (userpassword === confirmationPassword) {
       submitRegistration();
     } else {
-      setErrorMessage("Passwords do not match.");
+      setErrorMessage("Şifreler uyuşmuyor.");
     }
   };
 
@@ -100,7 +98,7 @@ const Register = (props) => {
           </button>
         </div>
         <div className="text-center mt-4">
-          <a className="mt-4 underline hover:text-blue-700 hover:cursor-pointer" href="http://localhost:3000/login">If you have an account login</a>
+          <a className="mt-4 underline hover:text-blue-700 hover:cursor-pointer" href="/login">Already have an account? Login</a>
         </div>
       </form>
     </div>

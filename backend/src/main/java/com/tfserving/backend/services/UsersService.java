@@ -14,7 +14,7 @@ import java.util.List;
 public class UsersService {
 
     @Autowired
-    UsersRepository usersRepository;
+    private UsersRepository usersRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -66,11 +66,11 @@ public class UsersService {
         return usersRepository.save(user);
     }
 
-    public boolean login(String username, String userpassword) {
+    public Users loginAndGetUser(String username, String userpassword) {
         Users user = usersRepository.findByUsername(username);
         if (user != null && passwordEncoder.matches(userpassword, user.getUserpassword())) {
-            return true;
+            return user;
         }
-        return false;
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useUser } from '../contexts/UserContext';
 
 const processImage = async (file) => {
   const img = new Image();
@@ -46,6 +47,7 @@ const Cifar10PredictForm = () => {
   const [imagePreview, setImagePreview] = useState(null); 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+  const { user } = useUser(); 
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -81,11 +83,14 @@ const Cifar10PredictForm = () => {
 
       if (result.data && result.data.predicted_class) {
         const predictedClass = result.data.predicted_class;
-        setResponse({ predictedClass: predictedClass });
+        setResponse({ predictedClass });
+        console.log(user);
+        
+        
         try {
-          const save_prediction = await axios.post('http://localhost:8080/predictions', {
+          await axios.post('http://localhost:8081/predictions', {
             modelId: 1,
-            userId: 1,
+            userId: user.id,
             result: predictedClass
           }, {
             headers: {
@@ -94,28 +99,38 @@ const Cifar10PredictForm = () => {
             timeout: 5000
           });
         } catch (error) {
-          console.log("Error details:", error);
-          setError(error.response ? error.response.data : 'An error occurred');
+          console.error("Error saving prediction:", error);
+          setError(error.response ? error.response.data : 'An error occurred while saving prediction');
         }
       } else {
-        console.log("Predictions data is not available.");
         setError("Prediction data is not available.");
       }
     } catch (error) {
-      console.log("Error details:", error);
-      setError(error.response ? error.response.data : 'An error occurred');
+      console.error("Error fetching prediction:", error);
+      setError(error.response ? error.response.data : 'An error occurred while fetching prediction');
     }
   };
 
   return (
-    <>
     <div className='flex justify-center'>
-      <div className='flex justify-center flex-col w-1/2'>
+      <div className='flex flex-col w-1/2'>
         <form className='flex flex-col' onSubmit={handleSubmit}>
-          <label className="flex justify-center mb-2 text-l font-medium text-gray-900">Upload Image for Prediction</label>
-          <input type="file" accept="image/*" className=" flex justify-center text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" onChange={handleImageChange} />   
+          <label className="flex justify-center mb-2 text-l font-medium text-gray-900">
+            Upload Image for Prediction
+          </label>
+          <input 
+            type="file" 
+            accept="image/*" 
+            className="flex justify-center text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
+            onChange={handleImageChange} 
+          />
           <div className='flex justify-center my-4'>
-            <button type="submit" className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Submit</button>
+            <button 
+              type="submit" 
+              className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Submit
+            </button>
           </div>
         </form>
         {imagePreview && (
@@ -132,7 +147,6 @@ const Cifar10PredictForm = () => {
         {error && <div>Error: {JSON.stringify(error)}</div>}
       </div>
     </div>
-    </>
   );
 };
 

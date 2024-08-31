@@ -1,51 +1,58 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext';
 
-
-const Login = (props) => {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [userpassword, setUserpassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const { login } = useUser(); // Doğru fonksiyon
 
+  const submitLogin = async () => {
+    console.log("submitLogin function called");
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, userpassword }),
+    };
 
-  const submitRegistration = async () => {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, userpassword }),
-      };
+    try {
+      const response = await fetch("http://localhost:8081/users/login", requestOptions);
+      console.log("Fetch response received");
+      const contentType = response.headers.get('Content-Type');
+      let data;
 
-      try {
-        const response = await fetch("http://localhost:8080/users/login", requestOptions);
-        
-        console.log("Response:", response);
-
-        let data;
+      if (contentType && contentType.includes('application/json')) {
         try {
-          data = await response.text(); // JSON yerine text kullanıyoruz
-          console.log("Data:", data);
-        } catch (textError) {
-          console.error("Failed to parse response:", textError);
+          data = await response.json(); // Parse JSON response
+        } catch (jsonError) {
+          console.error("Failed to parse JSON response:", jsonError);
+          setErrorMessage("Failed to parse response. Please try again.");
+          return;
         }
-
-        if (!response.ok) {
-          setErrorMessage("Login failed. Please try again.");
-        } else {
-          props.setIsLoggedIn(true);
-          navigate('/'); 
-        }
-      } catch (error) {
-        console.error("Network error:", error);
-        setErrorMessage("Network error. Please try again later.");
+      } else {
+        setErrorMessage("Unexpected response format");
+        return;
       }
+
+      if (response.ok && data.user) {
+        login(data.user); // Set user details in context
+        localStorage.setItem('user', JSON.stringify(data.user)); // Store user in localStorage
+        console.log("Login successful, navigating to home page");
+        navigate('/');
+      } else {
+        setErrorMessage(data.message || "Login failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      setErrorMessage("Network error. Please try again later.");
+    }
   };
-
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    submitRegistration();
+    submitLogin();
   };
 
   return (
@@ -64,7 +71,7 @@ const Login = (props) => {
             required
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-6">
           <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
           <input
             type="password"
@@ -84,10 +91,9 @@ const Login = (props) => {
           </button>
         </div>
         <div className="text-center mt-4">
-          <a className="mt-4 underline hover:text-blue-700 hover:cursor-pointer" href="http://localhost:3000/register">If you don't have an account sign up</a>
+          <a className="mt-4 underline hover:text-blue-700 hover:cursor-pointer" href="/register">Don't you have an account? Register</a>
         </div>
       </form>
-      
     </div>
   );
 };
