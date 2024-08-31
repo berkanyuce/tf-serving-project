@@ -9,7 +9,15 @@ Prediction results are saved based on the logged-in user and the model used. The
 
 ## **How to Run the Project**
 
-### 1. Build and Start the Project
+### 1. Build Spring Boot
+You need to compile Spring Boot without database test.
+
+```bash
+cd backend
+mvn clean install -DskipTests
+```
+
+### 2. Build and Start the Project
 Navigate to the project directory and execute the following command:
 
 ```bash
@@ -18,7 +26,7 @@ docker-compose up --build
 
 If you don't use ARM processor you should use docker-compose-amd.yml file.
 
-### 2. Load the Database Backup
+### 3. Load the Database Backup
 
 **Step 1:** Open a new terminal and connect to the PostgreSQL container. Then, create a backup folder:
 
