@@ -16,6 +16,8 @@ Navigate to the project directory and execute the following command:
 docker-compose up --build
 ```
 
+If you don't use ARM processor you should use docker-compose-amd.yml file.
+
 ### 2. Load the Database Backup
 
 **Step 1:** Open a new terminal and connect to the PostgreSQL container. Then, create a backup folder:
