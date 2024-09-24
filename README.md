@@ -46,3 +46,10 @@ docker cp database/backup/backup.sql postgres:/backup/backup.sql
 ```bash
 psql -U postgres -d tf_serving -f /backup/backup.sql
 ```
+
+### Screenshots
+![SS1](readme_files/1725136200440.jpeg)
+![SS2](readme_files/1725136200399.jpeg)
+![SS3](readme_files/1725136200725.jpeg)
+
+
